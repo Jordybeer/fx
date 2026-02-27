@@ -104,5 +104,85 @@
     "subfolder": "SFX",
     "type": "sfx",
     "src": "/audio/SFX/Alert.mp3"
+  },
+  {
+    "id": "_Arc_Pop_SFX",
+    "name": " Arc Pop",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Arc_Pop.mp3"
+  },
+  {
+    "id": "_Arc_Probe_breach_SFX",
+    "name": " Arc Probe breach",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Arc_Probe_breach.mp3"
+  },
+  {
+    "id": "_Baron_Husk_SFX",
+    "name": " Baron Husk",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Baron_Husk.mp3"
+  },
+  {
+    "id": "_Breach_and_Search_container_SFX",
+    "name": " Breach and Search container",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Breach_and_Search_container.mp3"
+  },
+  {
+    "id": "_Calling_Elevator_SFX",
+    "name": " Calling Elevator",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Calling_Elevator.mp3"
+  },
+  {
+    "id": "_Camera_beeping_SFX",
+    "name": " Camera beeping",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Camera_beeping.mp3"
+  },
+  {
+    "id": "_Craft_Arc_Circuity_SFX",
+    "name": " Craft Arc Circuity",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Arc_Circuity.mp3"
+  },
+  {
+    "id": "_Craft_Bandage_SFX",
+    "name": " Craft Bandage",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Bandage.mp3"
+  },
+  {
+    "id": "_Craft_Durable_Cloth_SFX",
+    "name": " Craft Durable Cloth",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Durable_Cloth.mp3"
+  },
+  {
+    "id": "_Craft_herbal_bandage_SFX",
+    "name": " Craft herbal bandage",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_herbal_bandage.mp3"
   }
 ]
