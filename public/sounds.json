@@ -352,5 +352,13 @@
     "subfolder": "Memes",
     "type": "sfx",
     "src": "/audio/Memes/He_fucked_up.mp3"
+  },
+  {
+    "id": "Wii_Theme_Music",
+    "name": "Wii Theme",
+    "game": "Mario",
+    "subfolder": "Music",
+    "type": "sfx",
+    "src": "/audio/Music/Wii_Theme.mp3"
   }
 ]
