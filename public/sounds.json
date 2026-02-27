@@ -1,11 +1,11 @@
 [
-  { "id": "its_me_mario", "name": "It’s-a me, Mario", "game": "Mario", "type": "sfx", "src": "/audio/its_me_mario.mp3" },
+  { "id": "itsa_me", "name": "It's-a me", "game": "Mario", "type": "sfx", "src": "/audio/Itsa me.mp3" },
   { "id": "congratulations", "name": "Congratulations", "game": "Mario", "type": "sfx", "src": "/audio/congratulations.mp3" },
-  { "id": "super_mario_dies", "name": "Mario dies", "game": "Mario", "type": "sfx", "src": "/audio/super_mario_dies.mp3" },
-  { "id": "mario_wahooo", "name": "Wahoo!", "game": "Mario", "type": "sfx", "src": "/audio/mario_wahooo.mp3" },
-  { "id": "arc_raiders_shredder_2", "name": "Shredder 2", "game": "Arc Raiders", "type": "sfx", "src": "/audio/arc_raiders_shredder_2.mp3" },
-  { "id": "raider_legendary", "name": "Legendary", "game": "Arc Raiders", "type": "sfx", "src": "/audio/raider_legendary.mp3" },
-  { "id": "arc_raiders_flare", "name": "Flare", "game": "Arc Raiders", "type": "sfx", "src": "/audio/arc_raiders_flare.mp3" },
-  { "id": "arc_raiders_wasp", "name": "Wasp", "game": "Arc Raiders", "type": "sfx", "src": "/audio/arc_raiders_wasp.mp3" },
-  { "id": "arc_raider_rocketeer", "name": "Rocketeer", "game": "Arc Raiders", "type": "sfx", "src": "/audio/arc_raider_rocketeer.mp3" }
+  { "id": "mario_dies", "name": "Mario dies", "game": "Mario", "type": "sfx", "src": "/audio/Mario dies.mp3" },
+  { "id": "wahooo", "name": "Wahooo!", "game": "Mario", "type": "sfx", "src": "/audio/Wahooo.mp3" },
+  { "id": "shredder", "name": "Shredder", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Shredder.mp3" },
+  { "id": "legendary", "name": "Legendary", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Legendary.mp3" },
+  { "id": "raider_flare", "name": "Raider Flare", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Raider Flare.mp3" },
+  { "id": "wasp", "name": "Wasp", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Wasp.mp3" },
+  { "id": "rocketeer", "name": "Rocketeer", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Rocketeer.mp3" }
 ]
