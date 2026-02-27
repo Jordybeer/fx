@@ -26,5 +26,10 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.35"
+  },
+  "overrides": {
+    "eslint": "^9",
+    "glob": "^10",
+    "rimraf": "^4"
   }
 }
