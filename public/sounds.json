@@ -96,5 +96,13 @@
     "game": "Mario",
     "type": "sfx",
     "src": "/audio/Start_Race.mp3"
+  },
+  {
+    "id": "Alert_SFX",
+    "name": "Alert",
+    "game": "MGS",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/Alert.mp3"
   }
 ]
