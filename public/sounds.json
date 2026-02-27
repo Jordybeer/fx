@@ -1,11 +1,100 @@
 [
-  { "id": "itsa_me", "name": "It's-a me", "game": "Mario", "type": "sfx", "src": "/audio/Itsa me.mp3" },
-  { "id": "congratulations", "name": "Congratulations", "game": "Mario", "type": "sfx", "src": "/audio/congratulations.mp3" },
-  { "id": "mario_dies", "name": "Mario dies", "game": "Mario", "type": "sfx", "src": "/audio/Mario dies.mp3" },
-  { "id": "wahooo", "name": "Wahooo!", "game": "Mario", "type": "sfx", "src": "/audio/Wahooo.mp3" },
-  { "id": "shredder", "name": "Shredder", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Shredder.mp3" },
-  { "id": "legendary", "name": "Legendary", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Legendary.mp3" },
-  { "id": "raider_flare", "name": "Raider Flare", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Raider Flare.mp3" },
-  { "id": "wasp", "name": "Wasp", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Wasp.mp3" },
-  { "id": "rocketeer", "name": "Rocketeer", "game": "Arc Raiders", "type": "sfx", "src": "/audio/Rocketeer.mp3" }
+  {
+    "id": "itsa_me",
+    "name": "It's-a me",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Itsa me.mp3"
+  },
+  {
+    "id": "congratulations",
+    "name": "Congratulations",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/congratulations.mp3"
+  },
+  {
+    "id": "mario_dies",
+    "name": "Mario dies",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Mario dies.mp3"
+  },
+  {
+    "id": "wahooo",
+    "name": "Wahooo!",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Wahooo.mp3"
+  },
+  {
+    "id": "shredder",
+    "name": "Shredder",
+    "game": "Arc Raiders",
+    "type": "sfx",
+    "src": "/audio/Shredder.mp3"
+  },
+  {
+    "id": "legendary",
+    "name": "Legendary",
+    "game": "Arc Raiders",
+    "type": "sfx",
+    "src": "/audio/Legendary.mp3"
+  },
+  {
+    "id": "raider_flare",
+    "name": "Raider Flare",
+    "game": "Arc Raiders",
+    "type": "sfx",
+    "src": "/audio/Raider Flare.mp3"
+  },
+  {
+    "id": "wasp",
+    "name": "Wasp",
+    "game": "Arc Raiders",
+    "type": "sfx",
+    "src": "/audio/Wasp.mp3"
+  },
+  {
+    "id": "rocketeer",
+    "name": "Rocketeer",
+    "game": "Arc Raiders",
+    "type": "sfx",
+    "src": "/audio/Rocketeer.mp3"
+  },
+  {
+    "id": "Boo_ghost_laugh",
+    "name": "Boo ghost laugh",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Boo_ghost_laugh.mp3"
+  },
+  {
+    "id": "Mamma_Mia",
+    "name": "Mamma Mia",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Mamma_Mia.mp3"
+  },
+  {
+    "id": "Jump",
+    "name": "Jump",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Jump.mp3"
+  },
+  {
+    "id": "1up",
+    "name": "1up",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/1up.mp3"
+  },
+  {
+    "id": "Start_Race",
+    "name": "Start Race",
+    "game": "Mario",
+    "type": "sfx",
+    "src": "/audio/Start_Race.mp3"
+  }
 ]
