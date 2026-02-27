@@ -15,7 +15,6 @@ interface Sound {
 
 export default function Soundboard() {
     const { data: session } = useSession();
-    // @ts-expect-error custom session property
     const isJordy = session?.user?.login?.toLowerCase() === 'jordybeer';
 
     const [sounds, setSounds] = useState<Sound[]>([]);
