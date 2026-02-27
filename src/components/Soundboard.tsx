@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Square, Heart, Play, Repeat, Lightbulb, Github, Upload } from 'lucide-react';
+import { useSession, signIn, signOut } from "next-auth/react";
+import { Search, Square, Heart, Play, Repeat, Lightbulb, Github, Upload, LogOut } from 'lucide-react';
 
 type SoundType = 'sfx' | 'music';
 interface Sound {
@@ -12,21 +13,17 @@ interface Sound {
   src: string;
 }
 
-const SOUNDS: Sound[] = [
-    { id: '1', name: 'Level Up', game: 'Arc Raiders', type: 'sfx', src: '/audio/levelup.mp3' },
-    { id: '2', name: '1-Up', game: 'Mario', type: 'sfx', src: '/audio/1up.mp3' },
-    { id: '3', name: 'Ambient Loop', game: 'Misc', type: 'music', src: '/audio/loop.mp3' },
-    { id: '4', name: 'Sniper Shot', game: 'Arc Raiders', type: 'sfx', src: '/audio/sniper.mp3' },
-];
-
-const CATEGORIES = ['All', 'Favorites', ...Array.from(new Set(SOUNDS.map(s => s.game)))];
-
 export default function Soundboard() {
+    const { data: session } = useSession();
+    // @ts-expect-error custom session property
+    const isJordy = session?.user?.login?.toLowerCase() === 'jordybeer';
+
+    const [sounds, setSounds] = useState<Sound[]>([]);
     const [search, setSearch] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
     const [favorites, setFavorites] = useState<string[]>([]);
     
-    // Audio State & Refs
+    // Audio State
     const [playingId, setPlayingId] = useState<string | null>(null);
     const [playingMusicId, setPlayingMusicId] = useState<string | null>(null);
     const sfxAudio = useRef<HTMLAudioElement | null>(null);
@@ -35,8 +32,13 @@ export default function Soundboard() {
     // UI State
     const [theme, setTheme] = useState('dark');
     const [mounted, setMounted] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
+
+    // Upload Form State
+    const [uploadFile, setUploadFile] = useState<File | null>(null);
+    const [uploadName, setUploadName] = useState('');
+    const [uploadGame, setUploadGame] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -46,7 +48,15 @@ export default function Soundboard() {
         const savedTheme = localStorage.getItem('arc-theme') || 'dark';
         setTheme(savedTheme);
         document.documentElement.className = savedTheme;
+
+        // Fetch sounds from public/sounds.json
+        fetch('/sounds.json')
+            .then(res => res.json())
+            .then(data => setSounds(data))
+            .catch(err => console.error("Failed to load sounds.json", err));
     }, []);
+
+    const categories = ['All', 'Favorites', ...Array.from(new Set(sounds.map(s => s.game)))];
 
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -97,9 +107,39 @@ export default function Soundboard() {
         setPlayingMusicId(null);
     };
 
+    const handleUpload = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!uploadFile || !uploadName || !uploadGame) return alert("Fill all fields");
+        
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append("file", uploadFile);
+        formData.append("name", uploadName);
+        formData.append("game", uploadGame);
+        formData.append("type", "sfx"); // Default to SFX for now
+
+        try {
+            const res = await fetch("/api/upload", { method: "POST", body: formData });
+            const data = await res.json();
+            if (res.ok) {
+                alert("Success! The repository has been updated. Vercel is building the new version.");
+                setShowUploadModal(false);
+                setUploadFile(null);
+                setUploadName('');
+                setUploadGame('');
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (err) {
+            alert("Upload failed. Check console.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     if (!mounted) return null;
 
-    const filteredSounds = SOUNDS.filter(sound => {
+    const filteredSounds = sounds.filter(sound => {
         const matchesSearch = sound.name.toLowerCase().includes(search.toLowerCase()) || sound.game.toLowerCase().includes(search.toLowerCase());
         const matchesCat = activeCategory === 'All' ? true : activeCategory === 'Favorites' ? favorites.includes(sound.id) : sound.game === activeCategory;
         return matchesSearch && matchesCat;
@@ -138,13 +178,17 @@ export default function Soundboard() {
                             <Lightbulb size={18} className={theme === 'dark' ? 'text-yellow-500' : 'text-[var(--text-main)]'} />
                         </button>
                         
-                        {!isLoggedIn ? (
-                            <button onClick={() => setIsLoggedIn(true)} className="bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 px-3 sm:px-4 py-2.5 rounded-lg flex items-center text-sm font-semibold">
+                        {!session ? (
+                            <button onClick={() => signIn("github")} className="bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 px-3 sm:px-4 py-2.5 rounded-lg flex items-center text-sm font-semibold">
                                 <Github size={16} /><span className="ml-2 hidden sm:inline">Sign In</span>
                             </button>
-                        ) : (
-                            <button onClick={() => setShowUploadModal(true)} className="bg-blue-600 text-white px-3 sm:px-4 py-2.5 rounded-lg flex items-center text-sm font-semibold">
+                        ) : isJordy ? (
+                            <button onClick={() => setShowUploadModal(true)} className="bg-blue-600 text-white px-3 sm:px-4 py-2.5 rounded-lg flex items-center text-sm font-semibold hover:bg-blue-500">
                                 <Upload size={16} /><span className="ml-2 hidden sm:inline">Upload</span>
+                            </button>
+                        ) : (
+                            <button onClick={() => signOut()} className="bg-zinc-800 text-[var(--text-muted)] px-3 sm:px-4 py-2.5 rounded-lg flex items-center text-sm font-semibold">
+                                <LogOut size={16} /><span className="ml-2 hidden sm:inline">Sign Out</span>
                             </button>
                         )}
 
@@ -155,7 +199,7 @@ export default function Soundboard() {
                 </div>
 
                 <div className="max-w-7xl mx-auto flex overflow-x-auto no-scrollbar gap-2">
-                    {CATEGORIES.map(cat => (
+                    {categories.map(cat => (
                         <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-3.5 py-1.5 rounded-full whitespace-nowrap text-xs font-semibold tracking-wide border ${activeCategory === cat ? 'bg-blue-600 text-white border-blue-600' : 'input-glass'}`}>
                             {cat}
                         </button>
@@ -164,38 +208,60 @@ export default function Soundboard() {
             </div>
 
             <div className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-8">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
-                    {filteredSounds.map(sound => {
-                        const isPlaying = sound.type === 'music' ? playingMusicId === sound.id : playingId === sound.id;
-                        const isFav = favorites.includes(sound.id);
+                {sounds.length === 0 ? (
+                    <div className="text-center text-[var(--text-muted)] mt-10">Loading sounds from API...</div>
+                ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3">
+                        {filteredSounds.map(sound => {
+                            const isPlaying = sound.type === 'music' ? playingMusicId === sound.id : playingId === sound.id;
+                            const isFav = favorites.includes(sound.id);
 
-                        return (
-                            <div key={sound.id} onClick={() => playSound(sound)} className={`sound-tile group cursor-pointer p-2.5 sm:p-3 flex items-center gap-3 ${isPlaying ? 'is-playing' : ''}`}>
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isPlaying ? 'bg-blue-500/20' : 'bg-black/10 dark:bg-white/10 group-hover:bg-black/20 dark:group-hover:bg-white/20'}`}>
-                                    {isPlaying ? <div className="eq-container"><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/></div> : (sound.type === 'music' ? <Repeat size={14} className="text-[var(--text-muted)]" /> : <Play size={14} className="ml-0.5 text-[var(--text-muted)]" fill="currentColor" />)}
+                            return (
+                                <div key={sound.id} onClick={() => playSound(sound)} className={`sound-tile group cursor-pointer p-2.5 sm:p-3 flex items-center gap-3 ${isPlaying ? 'is-playing' : ''}`}>
+                                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isPlaying ? 'bg-blue-500/20' : 'bg-black/10 dark:bg-white/10 group-hover:bg-black/20 dark:group-hover:bg-white/20'}`}>
+                                        {isPlaying ? <div className="eq-container"><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/></div> : (sound.type === 'music' ? <Repeat size={14} className="text-[var(--text-muted)]" /> : <Play size={14} className="ml-0.5 text-[var(--text-muted)]" fill="currentColor" />)}
+                                    </div>
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className={`text-sm font-semibold truncate ${isPlaying ? 'text-blue-500 dark:text-blue-400' : ''}`}>{sound.name}</div>
+                                        <div className="text-[10px] sm:text-xs text-[var(--text-muted)] uppercase tracking-wider truncate">{sound.game}</div>
+                                    </div>
+                                    <button onClick={(e) => toggleFavorite(sound.id, e)} className={`flex-shrink-0 p-1 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-30 sm:opacity-0 sm:group-hover:opacity-100'}`}>
+                                        <Heart size={16} fill={isFav ? "currentColor" : "none"} className={isFav ? "text-blue-500" : "text-[var(--text-muted)]"} />
+                                    </button>
                                 </div>
-                                <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                    <div className={`text-sm font-semibold truncate ${isPlaying ? 'text-blue-500 dark:text-blue-400' : ''}`}>{sound.name}</div>
-                                    <div className="text-[10px] sm:text-xs text-[var(--text-muted)] uppercase tracking-wider truncate">{sound.game}</div>
-                                </div>
-                                <button onClick={(e) => toggleFavorite(sound.id, e)} className={`flex-shrink-0 p-1 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-30 sm:opacity-0 sm:group-hover:opacity-100'}`}>
-                                    <Heart size={16} fill={isFav ? "currentColor" : "none"} className={isFav ? "text-blue-500" : "text-[var(--text-muted)]"} />
-                                </button>
-                            </div>
-                        );
-                    })}
-                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             {showUploadModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setShowUploadModal(false)}>
-                    <div className="sound-tile p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => !isUploading && setShowUploadModal(false)}>
+                    <form onSubmit={handleUpload} className="sound-tile p-6 w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
                         <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><Upload size={20} /> Upload to GitHub</h2>
-                        <p className="text-sm text-[var(--text-muted)] mb-4">API integration pending. This will push MP3s to /public/audio.</p>
-                        <div className="flex justify-end gap-2 mt-6">
-                            <button onClick={() => setShowUploadModal(false)} className="px-4 py-2 text-sm font-semibold input-glass rounded">Cancel</button>
+                        
+                        <div className="space-y-4 mb-6">
+                            <div>
+                                <label className="block text-xs font-semibold mb-1 text-[var(--text-muted)]">MP3 File</label>
+                                <input type="file" accept="audio/mp3" required onChange={e => setUploadFile(e.target.files?.[0] || null)} className="w-full text-sm input-glass p-2 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold mb-1 text-[var(--text-muted)]">Display Name</label>
+                                <input type="text" placeholder="e.g. Oof Sound" required value={uploadName} onChange={e => setUploadName(e.target.value)} className="w-full text-sm input-glass p-2 rounded" />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold mb-1 text-[var(--text-muted)]">Game / Category</label>
+                                <input type="text" placeholder="e.g. Roblox" required value={uploadGame} onChange={e => setUploadGame(e.target.value)} className="w-full text-sm input-glass p-2 rounded" />
+                            </div>
                         </div>
-                    </div>
+
+                        <div className="flex justify-end gap-2">
+                            <button type="button" disabled={isUploading} onClick={() => setShowUploadModal(false)} className="px-4 py-2 text-sm font-semibold input-glass rounded opacity-80 hover:opacity-100">Cancel</button>
+                            <button type="submit" disabled={isUploading} className="px-4 py-2 text-sm font-semibold bg-blue-600 text-white rounded hover:bg-blue-500 disabled:opacity-50">
+                                {isUploading ? 'Committing...' : 'Commit to Repo'}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             )}
         </div>
