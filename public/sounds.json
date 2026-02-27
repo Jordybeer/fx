@@ -256,5 +256,61 @@
     "subfolder": "SFX",
     "type": "sfx",
     "src": "/audio/SFX/_Leaper_spots_you.mp3"
+  },
+  {
+    "id": "_Mega_rare_loot_SFX",
+    "name": " Mega rare loot",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Mega_rare_loot.mp3"
+  },
+  {
+    "id": "_Okay_SFX",
+    "name": " Okay",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Okay.mp3"
+  },
+  {
+    "id": "_Open_door_SFX",
+    "name": " Open door",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Open_door.mp3"
+  },
+  {
+    "id": "_Returning_to_Speranza_SFX",
+    "name": " Returning to Speranza",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Returning_to_Speranza.mp3"
+  },
+  {
+    "id": "_Shield_breaking_explosion_SFX",
+    "name": " Shield breaking (explosion)",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Shield_breaking_explosion.mp3"
+  },
+  {
+    "id": "_Shield_recharge_SFX",
+    "name": " Shield recharge",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Shield_recharge.mp3"
+  },
+  {
+    "id": "_Sliding_down_the_stairs_SFX",
+    "name": " Sliding down the stairs",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Sliding_down_the_stairs.mp3"
   }
 ]
