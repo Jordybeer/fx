@@ -312,5 +312,45 @@
     "subfolder": "SFX",
     "type": "sfx",
     "src": "/audio/SFX/_Sliding_down_the_stairs.mp3"
+  },
+  {
+    "id": "Yeah_Boi_Memes",
+    "name": "Yeah Boi",
+    "game": "Misc",
+    "subfolder": "Memes",
+    "type": "sfx",
+    "src": "/audio/Memes/Yeah_Boi.mp3"
+  },
+  {
+    "id": "Sad_Violin_Memes",
+    "name": "Sad Violin",
+    "game": "Misc",
+    "subfolder": "Memes",
+    "type": "sfx",
+    "src": "/audio/Memes/Sad_Violin.mp3"
+  },
+  {
+    "id": "FBI_Open_Up_Memes",
+    "name": "FBI Open Up",
+    "game": "Misc",
+    "subfolder": "Memes",
+    "type": "sfx",
+    "src": "/audio/Memes/FBI_Open_Up.mp3"
+  },
+  {
+    "id": "Alert_Memes",
+    "name": "Alert",
+    "game": "Misc",
+    "subfolder": "Memes",
+    "type": "sfx",
+    "src": "/audio/Memes/Alert.mp3"
+  },
+  {
+    "id": "He_fucked_up_Memes",
+    "name": "He fucked up",
+    "game": "Misc",
+    "subfolder": "Memes",
+    "type": "sfx",
+    "src": "/audio/Memes/He_fucked_up.mp3"
   }
 ]
