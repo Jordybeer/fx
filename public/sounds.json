@@ -184,5 +184,77 @@
     "subfolder": "SFX",
     "type": "sfx",
     "src": "/audio/SFX/_Craft_herbal_bandage.mp3"
+  },
+  {
+    "id": "_Craft_Kettle_SFX",
+    "name": " Craft Kettle",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Kettle.mp3"
+  },
+  {
+    "id": "_Craft_Mechanical_Component_SFX",
+    "name": " Craft Mechanical Component",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Mechanical_Component.mp3"
+  },
+  {
+    "id": "_Craft_Mod_Component_SFX",
+    "name": " Craft Mod Component",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Craft_Mod_Component.mp3"
+  },
+  {
+    "id": "_Deadline_blowing_you_up_SFX",
+    "name": " Deadline blowing you up",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Deadline_blowing_you_up.mp3"
+  },
+  {
+    "id": "_Epic_loot_SFX",
+    "name": " Epic loot",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Epic_loot.mp3"
+  },
+  {
+    "id": "_Epic_loot_2_SFX",
+    "name": " Epic loot 2",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Epic_loot_2.mp3"
+  },
+  {
+    "id": "_Epic_loot_3_SFX",
+    "name": " Epic loot 3",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Epic_loot_3.mp3"
+  },
+  {
+    "id": "_Game_intro_SFX",
+    "name": " Game intro",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Game_intro.mp3"
+  },
+  {
+    "id": "_Leaper_spots_you_SFX",
+    "name": " Leaper spots you",
+    "game": "Arc Raiders",
+    "subfolder": "SFX",
+    "type": "sfx",
+    "src": "/audio/SFX/_Leaper_spots_you.mp3"
   }
 ]
