@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Search, Square, Heart, Play, Repeat, Lightbulb, Github, Upload, LogOut } from 'lucide-react';
+import { Search, Square, Heart, Play, Repeat, Lightbulb, Github, Upload, LogOut, FolderTree } from 'lucide-react';
 
 type SoundType = 'sfx' | 'music';
 interface Sound {
   id: string;
   name: string;
   game: string;
+  subfolder?: string;
   type: SoundType;
   src: string;
 }
@@ -20,6 +21,7 @@ export default function Soundboard() {
     const [sounds, setSounds] = useState<Sound[]>([]);
     const [search, setSearch] = useState('');
     const [activeCategory, setActiveCategory] = useState('All');
+    const [activeSubfolder, setActiveSubfolder] = useState('All');
     const [favorites, setFavorites] = useState<string[]>([]);
     
     // Audio State
@@ -33,10 +35,10 @@ export default function Soundboard() {
     const [mounted, setMounted] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
 
-    // Upload Form State
-    const [uploadFile, setUploadFile] = useState<File | null>(null);
-    const [uploadName, setUploadName] = useState('');
+    // Batch Upload Form State
+    const [uploadFiles, setUploadFiles] = useState<File[]>([]);
     const [uploadGame, setUploadGame] = useState('');
+    const [uploadSubfolder, setUploadSubfolder] = useState('');
     const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
@@ -48,14 +50,24 @@ export default function Soundboard() {
         setTheme(savedTheme);
         document.documentElement.className = savedTheme;
 
-        // Fetch sounds from public/sounds.json
         fetch('/sounds.json')
             .then(res => res.json())
             .then(data => setSounds(data))
             .catch(err => console.error("Failed to load sounds.json", err));
     }, []);
 
+    // Derived Categories
     const categories = ['All', 'Favorites', ...Array.from(new Set(sounds.map(s => s.game)))];
+    
+    // Derived Subfolders based on active category
+    const availableSubfolders = activeCategory !== 'All' && activeCategory !== 'Favorites' 
+        ? ['All', ...Array.from(new Set(sounds.filter(s => s.game === activeCategory && s.subfolder).map(s => s.subfolder as string)))]
+        : [];
+
+    // Reset subfolder when category changes
+    useEffect(() => {
+        setActiveSubfolder('All');
+    }, [activeCategory]);
 
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -108,24 +120,23 @@ export default function Soundboard() {
 
     const handleUpload = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!uploadFile || !uploadName || !uploadGame) return alert("Fill all fields");
+        if (uploadFiles.length === 0 || !uploadGame) return alert("Select files and a Game category");
         
         setIsUploading(true);
         const formData = new FormData();
-        formData.append("file", uploadFile);
-        formData.append("name", uploadName);
+        uploadFiles.forEach(file => formData.append("file", file));
         formData.append("game", uploadGame);
-        formData.append("type", "sfx");
+        if (uploadSubfolder) formData.append("subfolder", uploadSubfolder);
 
         try {
             const res = await fetch("/api/upload", { method: "POST", body: formData });
             const data = await res.json();
             if (res.ok) {
-                alert("Success! The repository has been updated. Vercel is building the new version.");
+                alert(`Success! Uploaded ${data.added} files. The repository is building.`);
                 setShowUploadModal(false);
-                setUploadFile(null);
-                setUploadName('');
+                setUploadFiles([]);
                 setUploadGame('');
+                setUploadSubfolder('');
             } else {
                 alert(`Error: ${data.error}`);
             }
@@ -141,7 +152,8 @@ export default function Soundboard() {
     const filteredSounds = sounds.filter(sound => {
         const matchesSearch = sound.name.toLowerCase().includes(search.toLowerCase()) || sound.game.toLowerCase().includes(search.toLowerCase());
         const matchesCat = activeCategory === 'All' ? true : activeCategory === 'Favorites' ? favorites.includes(sound.id) : sound.game === activeCategory;
-        return matchesSearch && matchesCat;
+        const matchesSub = activeSubfolder === 'All' ? true : sound.subfolder === activeSubfolder;
+        return matchesSearch && matchesCat && matchesSub;
     }).sort((a, b) => {
         if (activeCategory !== 'Favorites') {
             const aFav = favorites.includes(a.id);
@@ -197,12 +209,27 @@ export default function Soundboard() {
                     </div>
                 </div>
 
-                <div className="max-w-[1600px] mx-auto flex overflow-x-auto no-scrollbar gap-2 sm:gap-3">
-                    {categories.map(cat => (
-                        <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-4 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-xs sm:text-sm font-semibold tracking-wide border transition-colors ${activeCategory === cat ? 'bg-blue-600 text-white border-blue-600' : 'input-glass hover:border-[var(--border-focus)]'}`}>
-                            {cat}
-                        </button>
-                    ))}
+                <div className="max-w-[1600px] mx-auto flex flex-col gap-2">
+                    {/* Main Categories */}
+                    <div className="flex overflow-x-auto no-scrollbar gap-2 sm:gap-3">
+                        {categories.map(cat => (
+                            <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-4 py-1.5 sm:py-2 rounded-full whitespace-nowrap text-xs sm:text-sm font-semibold tracking-wide border transition-colors ${activeCategory === cat ? 'bg-blue-600 text-white border-blue-600' : 'input-glass hover:border-[var(--border-focus)]'}`}>
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    {/* Secondary Subfolders (Only shows if current category has subfolders) */}
+                    {availableSubfolders.length > 1 && (
+                        <div className="flex overflow-x-auto no-scrollbar gap-2 mt-1">
+                            <div className="flex items-center text-[var(--text-muted)] px-1"><FolderTree size={14} /></div>
+                            {availableSubfolders.map(sub => (
+                                <button key={sub} onClick={() => setActiveSubfolder(sub)} className={`px-3 py-1 rounded-md whitespace-nowrap text-[11px] sm:text-xs font-semibold tracking-wide transition-colors ${activeSubfolder === sub ? 'bg-zinc-800 text-white dark:bg-zinc-200 dark:text-black' : 'bg-transparent text-[var(--text-muted)] hover:bg-black/5 dark:hover:bg-white/5'}`}>
+                                    {sub}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -216,15 +243,17 @@ export default function Soundboard() {
                             const isFav = favorites.includes(sound.id);
 
                             return (
-                                <div key={sound.id} onClick={() => playSound(sound)} className={`sound-tile group cursor-pointer p-3 sm:p-4 rounded-xl flex items-center gap-3 sm:gap-4 ${isPlaying ? 'is-playing' : ''}`}>
-                                    <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors ${isPlaying ? 'bg-blue-500/20' : 'bg-black/10 dark:bg-white/10 group-hover:bg-black/20 dark:group-hover:bg-white/20'}`}>
+                                <div key={sound.id} onClick={() => playSound(sound)} className={`sound-tile cursor-pointer p-3 sm:p-4 rounded-xl flex items-center gap-3 sm:gap-4 ${isPlaying ? 'is-playing' : ''}`}>
+                                    <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-colors ${isPlaying ? 'bg-blue-500/20' : 'bg-black/5 dark:bg-white/5'}`}>
                                         {isPlaying ? <div className="eq-container"><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/><div className="eq-bar"/></div> : (sound.type === 'music' ? <Repeat size={16} className="text-[var(--text-muted)]" /> : <Play size={16} className="ml-1 text-[var(--text-muted)]" fill="currentColor" />)}
                                     </div>
-                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                        <div className={`text-sm sm:text-base font-bold truncate ${isPlaying ? 'text-blue-500 dark:text-blue-400' : ''}`}>{sound.name}</div>
-                                        <div className="text-[10px] sm:text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider truncate mt-0.5">{sound.game}</div>
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center pr-1">
+                                        <div className={`text-sm sm:text-base font-bold leading-tight break-words line-clamp-2 ${isPlaying ? 'text-blue-500 dark:text-blue-400' : ''}`}>{sound.name}</div>
+                                        <div className="text-[10px] sm:text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider truncate mt-0.5">
+                                            {sound.game} {sound.subfolder && <span className="opacity-70">• {sound.subfolder}</span>}
+                                        </div>
                                     </div>
-                                    <button onClick={(e) => toggleFavorite(sound.id, e)} className={`flex-shrink-0 p-1.5 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-30 sm:opacity-0 sm:group-hover:opacity-100'}`}>
+                                    <button onClick={(e) => toggleFavorite(sound.id, e)} className={`flex-shrink-0 p-2 -mr-2 rounded-md transition-opacity ${isFav ? 'opacity-100' : 'opacity-30 hover:opacity-100'}`}>
                                         <Heart size={18} fill={isFav ? "currentColor" : "none"} className={isFav ? "text-blue-500" : "text-[var(--text-muted)] hover:text-blue-400"} />
                                     </button>
                                 </div>
@@ -237,27 +266,29 @@ export default function Soundboard() {
             {showUploadModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => !isUploading && setShowUploadModal(false)}>
                     <form onSubmit={handleUpload} className="sound-tile p-6 sm:p-8 w-full max-w-md shadow-2xl rounded-2xl" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-2"><Upload size={24} /> Upload to GitHub</h2>
+                        <h2 className="text-xl sm:text-2xl font-bold mb-2 flex items-center gap-2"><Upload size={24} /> Batch Upload</h2>
+                        <p className="text-xs text-[var(--text-muted)] mb-6">Names are auto-generated from filenames.</p>
                         
                         <div className="space-y-5 mb-8">
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">MP3 File</label>
-                                <input type="file" accept="audio/mp3" required onChange={e => setUploadFile(e.target.files?.[0] || null)} className="w-full text-sm sm:text-base input-glass p-3 rounded-lg" />
+                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">MP3 Files (Select Multiple)</label>
+                                <input type="file" accept="audio/mp3" multiple required onChange={e => setUploadFiles(Array.from(e.target.files || []))} className="w-full text-sm sm:text-base input-glass p-3 rounded-lg" />
+                                {uploadFiles.length > 0 && <div className="text-xs text-blue-500 mt-2 font-semibold">{uploadFiles.length} files selected</div>}
                             </div>
                             <div>
-                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">Display Name</label>
-                                <input type="text" placeholder="e.g. Oof Sound" required value={uploadName} onChange={e => setUploadName(e.target.value)} className="w-full text-sm sm:text-base input-glass p-3 rounded-lg" />
-                            </div>
-                            <div>
-                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">Game / Category</label>
+                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">Game / Main Category</label>
                                 <input type="text" placeholder="e.g. Roblox" required value={uploadGame} onChange={e => setUploadGame(e.target.value)} className="w-full text-sm sm:text-base input-glass p-3 rounded-lg" />
+                            </div>
+                            <div>
+                                <label className="block text-xs sm:text-sm font-semibold mb-1.5 text-[var(--text-muted)]">Tag / Subfolder (Optional)</label>
+                                <input type="text" placeholder="e.g. Voices, SFX, Memes" value={uploadSubfolder} onChange={e => setUploadSubfolder(e.target.value)} className="w-full text-sm sm:text-base input-glass p-3 rounded-lg" />
                             </div>
                         </div>
 
                         <div className="flex justify-end gap-3">
                             <button type="button" disabled={isUploading} onClick={() => setShowUploadModal(false)} className="px-5 py-2.5 text-sm sm:text-base font-semibold input-glass rounded-lg opacity-80 hover:opacity-100 transition-opacity">Cancel</button>
                             <button type="submit" disabled={isUploading} className="px-5 py-2.5 text-sm sm:text-base font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 transition-colors">
-                                {isUploading ? 'Committing...' : 'Commit to Repo'}
+                                {isUploading ? `Pushing ${uploadFiles.length}...` : 'Commit to Repo'}
                             </button>
                         </div>
                     </form>
