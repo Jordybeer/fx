@@ -360,5 +360,21 @@
     "subfolder": "Music",
     "type": "sfx",
     "src": "/audio/Music/Wii_Theme.mp3"
+  },
+  {
+    "id": "movies__tropic_thunder__full_retard",
+    "name": "Full retard",
+    "game": "Movies",
+    "subfolder": "Tropic_Thunder",
+    "type": "sfx",
+    "src": "/audio/Tropic_Thunder/Full_retard.mp3"
+  },
+  {
+    "id": "movies__tropic_thunder__fuck_your_own_face",
+    "name": "Fuck your own face",
+    "game": "Movies",
+    "subfolder": "Tropic_Thunder",
+    "type": "sfx",
+    "src": "/audio/Tropic_Thunder/Fuck_your_own_face.mp3"
   }
 ]
