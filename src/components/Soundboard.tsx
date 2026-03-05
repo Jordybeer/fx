@@ -46,6 +46,7 @@ export default function Soundboard() {
   const [mounted, setMounted] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const [editingSound, setEditingSound] = useState<Sound | null>(null);
@@ -95,9 +96,11 @@ export default function Soundboard() {
   }, [searchInput]);
 
   useEffect(() => {
-    const handleClickOutside = () => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setShowUserMenu(false);
+      }
       setActiveMenuId(null);
-      setShowUserMenu(false);
     };
 
     document.addEventListener('click', handleClickOutside);
@@ -446,7 +449,7 @@ export default function Soundboard() {
               <span className="hidden sm:inline">Stop</span>
             </button>
 
-            <div className="relative" onClick={(e) => e.stopPropagation()}>
+            <div className="relative" ref={userMenuRef}>
               {!session ? (
                 <button
                   type="button"
@@ -462,7 +465,10 @@ export default function Soundboard() {
                 <>
                   <button
                     type="button"
-                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowUserMenu(!showUserMenu);
+                    }}
                     className="input-glass hover:brightness-110 p-3 rounded-xl"
                     title="Open user menu"
                     aria-label="Open user menu"
