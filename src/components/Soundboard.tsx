@@ -27,7 +27,6 @@ function dedupeFiles(files: File[]) {
 
 export default function Soundboard() {
   const { data: session } = useSession();
-  const isJordy = session?.user?.login?.toLowerCase() === 'jordybeer';
 
   const [sounds, setSounds] = useState<Sound[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -476,20 +475,18 @@ export default function Soundboard() {
                         <div className="text-xs text-[var(--text-muted)] font-semibold">Signed in as</div>
                         <div className="text-sm font-bold truncate mt-1">{session.user?.name || session.user?.email}</div>
                       </div>
-                      {isJordy && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowUploadModal(true);
-                            setShowUserMenu(false);
-                          }}
-                          className="w-full px-4 py-3 text-left text-sm font-semibold hover:bg-blue-500/10 flex items-center gap-2 border-b border-[var(--border-line)]"
-                          title="Upload files"
-                          aria-label="Upload files"
-                        >
-                          <Upload size={14} /> Upload Files
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowUploadModal(true);
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full px-4 py-3 text-left text-sm font-semibold hover:bg-blue-500/10 flex items-center gap-2 border-b border-[var(--border-line)]"
+                        title="Upload files"
+                        aria-label="Upload files"
+                      >
+                        <Upload size={14} /> Upload Files
+                      </button>
                       <button
                         type="button"
                         onClick={() => signOut()}
@@ -587,17 +584,15 @@ export default function Soundboard() {
                     </div>
 
                     <div className="flex flex-col gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                      {isJordy && (
-                        <button
-                          type="button"
-                          onClick={(e) => toggleMenu(sound.id, e)}
-                          className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                          title="Open sound actions"
-                          aria-label={`Open actions for ${sound.name}`}
-                        >
-                          <Edit2 size={14} />
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={(e) => toggleMenu(sound.id, e)}
+                        className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                        title="Open sound actions"
+                        aria-label={`Open actions for ${sound.name}`}
+                      >
+                        <Edit2 size={14} />
+                      </button>
                       <button
                         type="button"
                         onClick={(e) => toggleFavorite(sound.id, e)}
@@ -610,7 +605,7 @@ export default function Soundboard() {
                     </div>
                   </div>
 
-                  {showMenu && isJordy && (
+                  {showMenu && (
                     <div className="absolute right-0 top-16 z-50 w-40 sound-tile border border-[var(--border-focus)] rounded-xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
