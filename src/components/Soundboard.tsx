@@ -175,7 +175,12 @@ export default function Soundboard() {
     setActiveMenuId(activeMenuId === id ? null : id);
   };
 
-  const playSound = (sound: Sound) => {
+  const playSound = (sound: Sound, e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) {
+      return;
+    }
+
     if (activeMenuId) {
       setActiveMenuId(null);
       return;
@@ -568,7 +573,7 @@ export default function Soundboard() {
               return (
                 <div key={sound.id} className="relative group">
                   <div
-                    onClick={() => playSound(sound)}
+                    onClick={(e) => playSound(sound, e)}
                     className={`sound-tile cursor-pointer p-4 rounded-2xl flex items-start gap-4 transition-all duration-200 ${isPlaying ? 'is-playing ring-2 ring-blue-500/50 shadow-xl shadow-blue-500/20' : 'hover:shadow-lg'}`}
                   >
                     <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all ${isPlaying ? 'bg-blue-500/20 text-blue-500 scale-105' : 'bg-black/5 dark:bg-white/5 text-[var(--text-muted)]'}`}>
